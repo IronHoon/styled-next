@@ -1,17 +1,12 @@
 import React, {useEffect, useRef} from 'react';
 import Head from 'next/head';
-import { getServerSideProps } from '.';
 import isbot from 'isbot'
 
-function Intro() {
+function Intro(userAgent) {
 // const results = getServerSideProps;
 // console.log(results);
-var isBot = useRef(null);
-useEffect(() => {
-   isBot = isbot(navigator.userAgent);
-  console.log(isBot);
-
-}, [])
+var isBot = isbot(userAgent);
+console.log(userAgent)
 console.log(isBot)
 // const user = /bot|spider|crawl/i.test(window.navigator.userAgent);
 
@@ -20,7 +15,7 @@ console.log(isBot)
    <>
     <Head>
         <title>The Rock (1996)</title>
-        {!isBot?
+        {isBot?
         <>
         <meta property="og:title" content="The Rock" />
           <meta property="og:description" content="안녕 여기는 메타태그 연습장이야" />
@@ -39,5 +34,19 @@ console.log(isBot)
   
   );
 }
+
+export async function getServerSideProps({req} ) {
+  const userAgent = req.headers['user-agent']
+  // Fetch data from external API
+  
+
+  // Pass data to the page via props
+  return { 
+      props:{
+        userAgent: userAgent
+   }
+}
+}
+
 
 export default Intro;
